@@ -1,19 +1,30 @@
+const fs = require('fs');
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const socketIO = require('socket.io');
 const qrcode = require('qrcode');
-const http = require('http');
+const https = require('https'); // Use https instead of http
 const fileUpload = require('express-fileupload');
 const axios = require('axios');
 const mime = require('mime-types');
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 443; // Change the port to 443 for HTTPS
 const app = express();
-const server = http.createServer(app);
+
+// Provide the paths to your SSL certificate and key
+const options = {
+    cert: fs.readFileSync('cert.pem'),
+    key: fs.readFileSync('key.pem'),
+};
+
+const server = https.createServer(options, app); // Create an HTTPS server
 const io = socketIO(server);
-const cors = require('cors'); // Importa o pacote 'cors'
+const cors = require('cors'); // Import the 'cors' package
 
 app.use(cors());
+
+// The rest of your code remains unchanged...
+
 
 
 function delay(t, v) {
